@@ -246,7 +246,6 @@ export default class AccountStore {
 
       // close dialog when done
       this.setLoginDialog(false)
-      this.setLoginReviewDialog(false)
     } catch (err) {
       this.rootStore.notificationStore.pushError(err)
       this.logout()
