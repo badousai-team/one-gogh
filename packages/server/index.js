@@ -7,7 +7,6 @@ const { Umzug, SequelizeStorage } = require('umzug')
 
 const { db } = require('./models/db')
 const { setupCrons } = require('./cron')
-const { initReviewEvents } = require('./web3')
 
 const app = require('./app')
 
@@ -62,7 +61,6 @@ migrator
       console.log(`Server listening http on ${port}`)
       httpTerminator = createHttpTerminator({ server })
       process.send && process.send('ready')
-      initReviewEvents()
       if (process.env.API_SERVER_HOST !== 'localhost') {
         setupCrons()
       }
