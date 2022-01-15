@@ -2,7 +2,7 @@ const {
   User,
   CreatorFollow,
 } = require('../../models')
-const { NotFoundError } = require('../../exceptions')
+const { NotFoundError, AuthenticationError } = require('../../exceptions')
 
 module.exports.GetCreatorByUsernameUseCase = async ({ username }) => {
   const attributes = [
@@ -24,21 +24,31 @@ module.exports.GetCreatorByUsernameUseCase = async ({ username }) => {
   return creator
 }
 
-module.exports.FollowOtherCreator = async ({
-  creatorId,
+module.exports.FollowOtherCreatorUseCase = async ({
+  userId,
   followingId,
 }) => {
+  if (!userId) throw new AuthenticationError('AuthenticationError')
   const creator = await User.findByPk(followingId)
 
   if (!creator) throw new NotFoundError('Creator not found')
 
-  const creatorFollow = await User.create({
-    userId: creatorId,
-    followingId
-  })
+  const where = {
+    userId,
+    followingId,
+  }
 
-  return creatorFollow
+  const following = await CreatorFollow.findOne({ where })
+
+  if (following) {
+    // Unfollow
+    await CreatorFollow.destroy({ where })
+  } else {
+    // Follow
+    await CreatorFollow.create({ ...where })
+  }
+
+  // TODO: ADD Activity Log
+
+  return true
 }
-
-
-module.exports.GetCreatorByUsernameUseCase

@@ -1,6 +1,9 @@
-const { GetCreatorByUsernameUseCase } = require('./usecase')
+const {
+  GetCreatorByUsernameUseCase,
+  FollowOtherCreatorUseCase,
+} = require('./usecase')
 
-const handleGetCreatorByUsername = async (req, res) => {
+module.exports.handleGetCreatorByUsername = async (req, res) => {
   const { username } = req.params
 
   const creator = await GetCreatorByUsernameUseCase({ username })
@@ -8,8 +11,11 @@ const handleGetCreatorByUsername = async (req, res) => {
   res.json({ creator })
 }
 
-module.exports = {
-  handleGetCreatorByUsername,
+module.exports.handleFollowOtherCreator = async (req, res) => {
+  const { id: followingId } = req.params
+  const userId = req.currentUser?.id
+
+  await FollowOtherCreatorUseCase({ followingId, userId })
+
+  res.json({ status: 'success' })
 }
-
-
