@@ -8,6 +8,7 @@ module.exports = {
     es6: true,
     node: true,
     mocha: true,
+    jest: true,
   },
   parser: '@babel/eslint-parser',
   parserOptions: {
