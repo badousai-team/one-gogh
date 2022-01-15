@@ -1,0 +1,11 @@
+{
+  "name": "@one-gogh/contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One Gogh contract",
+  "author": "Badousai",
+  "exports": {
+    "./*": "./*.js",
+    "./abi/*": "./abi/*"
+  }
+}
