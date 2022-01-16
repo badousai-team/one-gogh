@@ -19,6 +19,7 @@ const publicController = require('./controllers/public')
 const userController = require('./controllers/user')
 const awsController = require('./controllers/aws')
 const sessionController = require('./controllers/session')
+const nftController = require('./controllers/nft')
 
 const app = express()
 
@@ -95,6 +96,7 @@ app.use('/aws', awsController)
 
 app.use('/activity', activityController)
 app.use('/creator', creatorController)
+app.use('/nft', nftController)
 
 app.use((err, req, res, next) => {
   if (!err) {
