@@ -9,7 +9,7 @@ const {
   paginate,
 } = require('../../utils/helper')
 const { NotFoundError, AuthenticationError } = require('../../exceptions')
-
+const { Op } = require('sequelize')
 
 module.exports.GetAllCreatorUseCase = async (query) => {
 
@@ -17,22 +17,27 @@ module.exports.GetAllCreatorUseCase = async (query) => {
   let limit = (query && query.limit && isNumber(query.limit)) ? parseInt(query.limit, 10) : 10
   let offset = (query && query.offset && isNumber(query.offset)) ? parseInt(query.offset, 10) : 0
 
+  const where = {}
+
   if (query.page) {
     const calc = calculateLimitAndOffset(Number(query.page), limit)
     limit = calc.limit
     offset = calc.offset
   }
 
+  if (query.name) where.name = { [Op.iLike]: `%${query.name}%` }
+  if (query.username) where.username = { [Op.iLike]: `%${query.username}%` }
+
   let sortBy = query.sortBy || 'createdAt'
   let sortDirection = 'DESC'
   const order = [[sortBy, sortDirection]]
 
   const result = await User.findAndCountAll({
+    where,
     limit,
     offset,
     order,
   })
-
 
   let meta = {}
 
