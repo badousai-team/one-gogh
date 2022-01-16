@@ -15,11 +15,11 @@ const redisClient = require('./service/redis')
 // controllers
 const activityController = require('./router/activity')
 const creatorController = require('./router/creator')
+const nftController = require('./router/nft')
 const publicController = require('./controllers/public')
 const userController = require('./controllers/user')
 const awsController = require('./controllers/aws')
 const sessionController = require('./controllers/session')
-const nftController = require('./controllers/nft')
 
 const app = express()
 
