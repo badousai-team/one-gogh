@@ -1,7 +1,9 @@
 import React, {
+  useCallback,
   useState,
 } from 'react'
 import { observer } from 'mobx-react'
+import { useHistory } from 'react-router-dom'
 import {
   FormControl,
   Typography,
@@ -9,65 +11,81 @@ import {
 import { makeStyles } from '@mui/styles'
 
 import CustomizedAutocomplete from 'site/components/autocomplete'
+import { useRequest } from 'site/hooks'
+import * as srv from 'site/services'
 
 import styles from './styles'
 
 const useStyles = makeStyles(styles)
 
-const dummyImageUrl = 'https://s3.ap-southeast-1.amazonaws.com/dmsasset-dev.prestodrycleaners.com.sg/uploads/e17dcbd3402fcf99rn_image_picker_lib_temp_d29d0aa3-4e6e-4df1-aeff-cb244e77d7e3.jpg'
-
-const top100Films = [
-  { label: 'The Shawshank Redemption', image: dummyImageUrl, user: '@shawshank' },
-  { label: 'The Godfather', image: dummyImageUrl, user: '@Godfather' },
-  { label: 'The Dark Knight', image: dummyImageUrl, user: '@DarkKnight' },
-  { label: '12 Angry Men', image: dummyImageUrl, user: '@AngryMen' },
-  { label: 'Schindler\'s List', image: dummyImageUrl, user: '@Schindler' },
-  { label: 'Pulp Fiction', image: dummyImageUrl, user: '@Pulp' },
-]
-
 const SearchCreator = () => {
+  const route = useHistory()
   const classes = useStyles()
-  const [search, setSearch] = useState()
+  const [creatorList, setCreatorList] = useState([])
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value)
-  }
+  const {
+    request: fetchCreator,
+    loading: creatorLoading,
+  } = useRequest(srv.fetchAllCreator, {
+    concurrent: true,
+    initialData: { list: [], total: 0 },
+    transformData: (data) => {
+      if (data && data.list.length > 0) {
+        setCreatorList(data.list.map(item => {
+          return {
+            ...item,
+            key: item.id,
+            label: item.username,
+          }
+        }))
+      }
+    },
+  })
+
+  const handleSearchCreatorInputChange = useCallback((event, newValue) => {
+    if (!newValue) {
+      setCreatorList([])
+      return
+    }
+    fetchCreator({ username: newValue })
+  }, [])
+
+  const handleChangeSearchCreator = useCallback((_, newValue) => {
+    if (newValue?.username) {
+      route.push(`/${newValue.username}`)
+    }
+  }, [])
 
   return (
     <div style={{ marginLeft: '1rem' }}>
-      <form
-        noValidate
-        onSubmit={handleSearch}
-        autoComplete="off"
-        className={classes.searchWrapper}
-      >
-        <FormControl component="fieldset" fullWidth>
-          <CustomizedAutocomplete
-            label="Search creator"
-            freeSolo
-            className={classes.textfield}
-            options={top100Films}
-            sx={{ width: 300 }}
-            classesAutocomplete={classes.textField}
-            blurOnSelect
-            value={search}
-            renderOption={(option, state) => (
-              <div {...option}>
-                <img
-                  className={classes.profileImg}
-                  src={state.image}
-                  alt={state.label}
-                  width="28"
-                  height="28"
-                />
-                <Typography variant="subtitle2" className={classes.username}>
-                  {`${state.label} - ${state.user}`}
-                </Typography>
-              </div>
-            )}
-          />
-        </FormControl>
-      </form>
+      <FormControl component="fieldset" fullWidth>
+        <CustomizedAutocomplete
+          label="Search creator"
+          freeSolo
+          className={classes.textfield}
+          sx={{ width: 300 }}
+          classesAutocomplete={classes.textField}
+          blurOnSelect
+          handleInputChange={handleSearchCreatorInputChange}
+          handleChange={handleChangeSearchCreator}
+          options={creatorList}
+          loading={creatorLoading}
+          renderOption={(option, state) => (
+            <div {...option}>
+              <img
+                className={classes.profileImg}
+                src={state.profileUrl}
+                alt={state.label}
+                width="28"
+                height="28"
+              />
+              <Typography variant="subtitle2" className={classes.username}>
+                {state.label}
+              </Typography>
+            </div>
+          )}
+        />
+      </FormControl>
     </div>
   )
 }
