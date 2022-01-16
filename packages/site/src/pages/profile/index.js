@@ -60,6 +60,7 @@ const Profile = () => {
   useEffect(() => {
     fetch()
   }, [username])
+
   const character = 159
 
   const data = useMemo(() => {
@@ -265,7 +266,27 @@ const Profile = () => {
           </Tabs>
         </Box>
         <Grid className={classes.tabContent}>
-          {activeTab === 0 && <Card />}
+          {activeTab === 0 && (
+            <Card
+              name={data.name || data.username}
+              photo={data.profilePhoto}
+              step="0"
+            />
+          )}
+          {activeTab === 1 && (
+            <Card
+              name={data.name || data.username}
+              photo={data.profilePhoto}
+              step="1"
+            />
+          )}
+          {activeTab === 2 && (
+            <Card
+              name={data.name || data.username}
+              photo={data.profilePhoto}
+              step="2"
+            />
+          )}
         </Grid>
       </Container>
     </Page>

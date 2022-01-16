@@ -26,7 +26,7 @@ import styles from './styles'
 
 const useStyles = makeStyles(styles)
 
-const CardItem = () => {
+const CardItem = ({ name, photo, step }) => {
   const classes = useStyles()
 
   const handleClick = () => {
@@ -39,22 +39,24 @@ const CardItem = () => {
         avatar={(
           <Avatar
             alt=""
-            src={Image}
+            src={photo}
           />
         )}
         action={(
-          <Chip
-            label="Follow"
-            onClick={handleClick}
-          />
+          step === '1' && (
+            <Chip
+              label="Follow"
+              onClick={handleClick}
+            />
+          )
         )}
         title="Created by"
-        subheader="Van gogh"
+        subheader={step !== '1' ? name : 'Picasso'}
       />
       <CardMedia
         component="img"
         height="329"
-        image={Image}
+        image={photo}
         alt=""
       />
       <CardContent>
@@ -97,13 +99,15 @@ const CardItem = () => {
             />
           )}
           action={(
-            <Chip
-              label="Follow"
-              onClick={handleClick}
-            />
+            step !== '1' && (
+              <Chip
+                label="Follow"
+                onClick={handleClick}
+              />
+            )
           )}
           title="Owned by"
-          subheader="Picasso"
+          subheader={step !== '1' ? 'Picasso' : name}
           className={classes.cardOwned}
         />
       </CardContent>
