@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { observer } from 'mobx-react'
 import clsx from 'clsx'
+import { useStores, useApiRequest } from 'site/hooks'
+import * as srv from 'site/services'
 
 // Material UI
 import {
@@ -13,6 +15,7 @@ import {
   Stack,
   Link as MuiLink,
   Box,
+  Button,
 } from '@mui/material'
 import {
   Check,
@@ -25,12 +28,13 @@ import {
   FavoriteBorderOutlined,
 } from '@mui/icons-material'
 import makeStyles from '@mui/styles/makeStyles'
+import { useParams } from 'react-router-dom'
 
 // common component
 import Page from 'site/components/page'
 import Container from 'site/components/container'
 import Banner from '../../../assets/images/png/banner.png'
-import Image from '../../../assets/images/png/user-login.png'
+import image from '../../../assets/images/png/user-login.png'
 import Card from './card'
 import styles from './styles'
 
@@ -41,22 +45,40 @@ const Profile = () => {
   const [copy, setCopy] = useState(false)
   const [activeTab, setActiveTab] = useState(0)
   const [overFlow, setOverflow] = useState(true)
+  const { creatorStore, accountStore } = useStores()
+  const { username } = useParams()
 
+  const {
+    request: followOtherCreator,
+  } = useApiRequest(srv.followOtherCreator, { blocking: true })
+
+  const fetch = () => {
+    creatorStore.fetchProfile(username)
+  }
+
+  useEffect(() => {
+    fetch()
+  }, [username])
   const character = 159
 
-  const data = {
-    banner: Banner,
-    profilePhoto: Image,
-    walletLabel: 'fbsdhfes66666fashfknekah88akhnslk',
-    following: '20',
-    followers: '30',
-    name: 'Starry Night',
-    userName: 'StarryNight',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisis nulla gravida risus mauris eget nisl dui. Hac a amet habitant augue tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    created: '20',
-    owned: '20',
-    liked: '35',
-  }
+  const data = useMemo(() => {
+    const creator = creatorStore.selected
+    return {
+      id: creator?.id,
+      banner: Banner,
+      profilePhoto: creator?.profileUrl || image,
+      walletLabel: creator?.address,
+      following: creator?.following,
+      followers: creator?.follower,
+      name: creator?.name,
+      username: creator?.username,
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisis nulla gravida risus mauris eget nisl dui. Hac a amet habitant augue tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      created: '20',
+      owned: '20',
+      liked: '35',
+      follow: creator?.follow,
+    }
+  }, [creatorStore.selected, username])
 
   const handleCopy = () => {
     setCopy(true)
@@ -70,6 +92,11 @@ const Profile = () => {
 
   const handleText = () => {
     setOverflow(!overFlow)
+  }
+
+  const handleFollow = async () => {
+    await followOtherCreator(data?.id)
+    fetch()
   }
 
   const tabItem = [
@@ -104,6 +131,14 @@ const Profile = () => {
       route: 'https://www.instagram.com/',
     },
   ]
+
+  if (!creatorStore.selected) {
+    return (
+      <div style={{ marginTop: '6rem', minHeight: '80vh', textAlign: 'center' }}>
+        User Not found
+      </div>
+    )
+  }
 
   return (
     <Page>
@@ -157,7 +192,7 @@ const Profile = () => {
             {data.name}
           </Typography>
           <Typography variant="h4">
-            {`@${data.userName}`}
+            {`@${data.username}`}
           </Typography>
           <Typography
             variant="h4"
@@ -184,6 +219,7 @@ const Profile = () => {
           <Stack
             direction="row"
             className={classes.action}
+            alignItems="center"
           >
             <Typography
               variant="h4"
@@ -194,6 +230,15 @@ const Profile = () => {
             <Typography variant="h4">
               {`${data.followers} Followers`}
             </Typography>
+            {data.username !== accountStore?.user?.username && (
+              <Button
+                variant="contained"
+                style={{ margin: '0 1rem' }}
+                onClick={handleFollow}
+              >
+                {data.follow ? 'Unfollow' : 'Follow'}
+              </Button>
+            )}
           </Stack>
         </Stack>
         <Box className={classes.boxTab}>

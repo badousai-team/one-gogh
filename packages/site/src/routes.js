@@ -8,7 +8,7 @@ import Profile from './pages/profile'
 export const Routes = () => (
   <Switch>
     <Route path="/test" component={Test} />
-    <Route path="/profile" component={Profile} />
+    <Route path="/:username" component={Profile} />
     <Route component={Home} />
   </Switch>
 )
