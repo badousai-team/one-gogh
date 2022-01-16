@@ -13,6 +13,7 @@ import {
   Stack,
   Link as MuiLink,
   Box,
+  Grid,
 } from '@mui/material'
 import {
   Check,
@@ -95,12 +96,12 @@ const Profile = () => {
     // },
     {
       id: 2,
-      icon: <Instagram fontSize="small" sx={{ color: '#C4C4C4' }} />,
+      icon: <Instagram fontSize="small" className={classes.iconColor} />,
       route: 'https://twitter.com/',
     },
     {
       id: 3,
-      icon: <Twitter fontSize="small" sx={{ color: '#C4C4C4' }} />,
+      icon: <Twitter fontSize="small" className={classes.iconColor} />,
       route: 'https://www.instagram.com/',
     },
   ]
@@ -196,7 +197,12 @@ const Profile = () => {
             </Typography>
           </Stack>
         </Stack>
-        <Box className={classes.boxTab}>
+        <Box sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          margin: '1rem 2.5rem 0 2.5rem',
+        }}
+        >
           <Tabs
             value={activeTab}
             onChange={handleChange}
@@ -213,7 +219,9 @@ const Profile = () => {
             ))}
           </Tabs>
         </Box>
-        {activeTab === 0 && <Card />}
+        <Grid className={classes.tabContent}>
+          {activeTab === 0 && <Card />}
+        </Grid>
       </Container>
     </Page>
   )

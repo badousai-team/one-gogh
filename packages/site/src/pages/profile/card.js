@@ -1,55 +1,52 @@
-import * as React from 'react'
-import { styled } from '@mui/material/styles'
+import React from 'react'
+import { observer } from 'mobx-react'
+import clsx from 'clsx'
+
+import {
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  Avatar,
+  Typography,
+  Chip,
+  Grid,
+  Stack,
+  Divider,
+} from '@mui/material'
 import {
   FavoriteBorderOutlined,
+  ChatBubbleOutline,
+  IosShare,
 } from '@mui/icons-material'
-import { Chip } from '@mui/material'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardMedia from '@mui/material/CardMedia'
-import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
-import Collapse from '@mui/material/Collapse'
-import Avatar from '@mui/material/Avatar'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import { red } from '@mui/material/colors'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import ShareIcon from '@mui/icons-material/Share'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+import makeStyles from '@mui/styles/makeStyles'
+
 import Image from '../../../assets/images/png/user-login.png'
+import styles from './styles'
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props
-  return <IconButton {...other} />
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}))
+const useStyles = makeStyles(styles)
 
-export default function RecipeReviewCard() {
-  const [expanded, setExpanded] = React.useState(false)
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded)
-  }
+const CardItem = () => {
+  const classes = useStyles()
 
   const handleClick = () => {
     console.info('You clicked the Chip.')
   }
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card className={classes.card}>
       <CardHeader
         avatar={(
-          <Avatar alt="" src={Image} />
+          <Avatar
+            alt=""
+            src={Image}
+          />
         )}
         action={(
-          <Chip label="Follow" onClick={handleClick} />
+          <Chip
+            label="Follow"
+            onClick={handleClick}
+          />
         )}
         title="Created by"
         subheader="Van gogh"
@@ -64,11 +61,54 @@ export default function RecipeReviewCard() {
         <Typography variant="h3">
           Metaverse
         </Typography>
-        <div sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <FavoriteBorderOutlined fontSize="small" sx={{ padding: 0, margin: 0 }} />
-          <Typography>50</Typography>
-        </div>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          className={classes.cardIcon}
+        >
+          <Stack direction="row">
+            <Grid className={clsx(
+              classes.cardIconContent,
+              classes.cardFavoriteIcon,
+            )}
+            >
+              <FavoriteBorderOutlined
+                fontSize="small"
+                className={classes.cardIconDetail}
+              />
+              <Typography>50</Typography>
+            </Grid>
+            <Grid className={classes.cardIconContent}>
+              <ChatBubbleOutline
+                fontSize="small"
+                className={classes.cardIconDetail}
+              />
+              <Typography>10</Typography>
+            </Grid>
+          </Stack>
+          <IosShare fontSize="small" />
+        </Stack>
+        <Divider className={classes.cardDivider} />
+        <CardHeader
+          avatar={(
+            <Avatar
+              alt=""
+              src={Image}
+            />
+          )}
+          action={(
+            <Chip
+              label="Follow"
+              onClick={handleClick}
+            />
+          )}
+          title="Owned by"
+          subheader="Picasso"
+          className={classes.cardOwned}
+        />
       </CardContent>
     </Card>
   )
 }
+
+export default observer(CardItem)
