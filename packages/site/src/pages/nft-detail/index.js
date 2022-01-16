@@ -1,4 +1,6 @@
-import React from 'react'
+import React, {
+  useEffect,
+} from 'react'
 import { observer } from 'mobx-react'
 import { useParams } from 'react-router-dom'
 
@@ -19,10 +21,15 @@ import {
 } from '@mui/material'
 import makeStyles from '@mui/styles/makeStyles'
 
+import { useApiRequest } from 'site/hooks'
+import * as srv from 'site/services'
+
 // common component
 import Page from 'site/components/page'
 import Container from 'site/components/container'
 import styles from './styles'
+
+import { dateFormat } from '../../utils/helper'
 
 const useStyles = makeStyles(styles)
 
@@ -102,6 +109,8 @@ function Media(props) {
   const {
     loading = false,
     img,
+    tokenId,
+    createdAt,
   } = props
 
   const classes = useStyles()
@@ -178,12 +187,12 @@ function Media(props) {
           {
             id: 1,
             label: 'Token Id',
-            value: '123123912939192m3918m239m183d91',
+            value: tokenId,
           },
           {
             id: 2,
             label: 'Created on',
-            value: '15/01/2022 22.16.27',
+            value: createdAt,
           },
           {
             id: 3,
@@ -212,11 +221,37 @@ const NFTDetails = () => {
   const classes = useStyles()
   const { id } = useParams()
 
+  const {
+    request: fetchNFTById,
+    data,
+  } = useApiRequest(srv.fetchNFTById, { blocking: false })
+
+  useEffect(() => {
+    if (id) {
+      const fetchBookingData = async () => {
+        await fetchNFTById(id)
+      }
+      fetchBookingData()
+    }
+  }, [id])
+
+  if (!data?.nft) return null
+
   return (
     <Page className={classes.page}>
       <Container className={classes.container}>
-        <Stack direction="row" spacing={6} alignItems="flex-start" justifyContent="center" style={{ margin: '0.5rem' }}>
-          <Media img="/images/png/wave-red.png" />
+        <Stack
+          direction="row"
+          spacing={6}
+          alignItems="flex-start"
+          justifyContent="center"
+          style={{ margin: '0.5rem' }}
+        >
+          <Media
+            img={data.nft.imageUrl || '/images/png/wave-red.png'}
+            tokenId={data.nft.nftAddress}
+            createdAt={dateFormat(data.nft.createdAt)}
+          />
           <MediaRight />
         </Stack>
       </Container>
