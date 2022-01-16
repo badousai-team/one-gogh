@@ -36,6 +36,7 @@ import Page from 'site/components/page'
 import Container from 'site/components/container'
 import Banner from '../../../assets/images/png/banner.png'
 import image from '../../../assets/images/png/user-login.png'
+import customIcon from '../../../assets/images/png/icon.png'
 import Card from './card'
 import styles from './styles'
 
@@ -117,11 +118,11 @@ const Profile = () => {
   ]
 
   const sosMed = [
-    // {
-    //   id: 1,
-    //   icon:
-    //   route:
-    // },
+    {
+      id: 1,
+      icon: <Avatar alt="" src={customIcon} className={classes.customIcon} />,
+      route: '',
+    },
     {
       id: 2,
       icon: <Instagram fontSize="small" className={classes.iconColor} />,

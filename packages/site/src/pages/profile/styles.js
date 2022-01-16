@@ -6,6 +6,10 @@ export default function styles() {
     iconColor: {
       color: '#C4C4C4',
     },
+    customIcon: {
+      width: 20,
+      height: 20,
+    },
     image: {
       height: '256px',
       borderRadius: '0 0 12px 12px',
