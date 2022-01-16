@@ -12,6 +12,7 @@ import {
   ButtonBase,
   useMediaQuery,
 } from '@mui/material'
+import { useHistory } from 'react-router-dom'
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
@@ -35,6 +36,7 @@ const HeaderProfile = ({ onCloseDrawer }) => {
   const open = Boolean(anchorEl)
   const classes = useStyle()
   const isMobile = useMediaQuery(theme => theme.breakpoints.down('sm'))
+  const router = useHistory()
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -44,6 +46,8 @@ const HeaderProfile = ({ onCloseDrawer }) => {
     setAnchorEl(null)
   }
   const handleProfileClick = () => {
+    const { user } = accountStore
+    router.push(`/${user.username}`)
     accountStore.openProfileDialog = true
     handleClose()
   }
