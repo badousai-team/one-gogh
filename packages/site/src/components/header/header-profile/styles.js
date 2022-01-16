@@ -6,7 +6,9 @@ export default (theme) => ({
   },
   avatar: {
     borderRadius: '30px',
-    marginRight: '0.4rem',
+    marginRight: '0.2rem',
+    width: 33,
+    height: 33,
   },
   accountContainer: {
     marginRight: '1rem',

@@ -11,6 +11,7 @@ import {
 
 import styles from './styles'
 import HeaderProfile from '../header-profile'
+
 const useStyle = makeStyles(styles)
 
 const LogoLink = styled(Link)(({ theme }) => ({

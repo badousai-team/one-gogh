@@ -2,22 +2,23 @@ const express = require('express')
 require('express-async-errors')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
-const { createHttpTerminator } = require('http-terminator')
 const noCache = require('nocache')
-const requireDir = require('require-dir')
 const cors = require('cors')
 const helmet = require('helmet')
 const requestIp = require('request-ip')
 const useragent = require('express-useragent')
-const { Umzug, SequelizeStorage } = require('umzug')
 
 const exception = require('./utils/exception')
-const { userAuth } = require('./middlewares/auth')
-const { db } = require('./models/db')
-const { setupCrons } = require('./cron')
+
 const redisClient = require('./service/redis')
 
-const routes = requireDir('./controllers', { recurse: true })
+// controllers
+const activityController = require('./router/activity')
+const creatorController = require('./router/creator')
+const publicController = require('./controllers/public')
+const userController = require('./controllers/user')
+const awsController = require('./controllers/aws')
+const sessionController = require('./controllers/session')
 
 const app = express()
 
@@ -50,7 +51,9 @@ if (app.get('env') === 'production') {
 // store session in redis
 sess.store = new RedisStore({ client: redisClient })
 
-app.use(session(sess))
+if (app.get('env') !== 'test') {
+  app.use(session(sess))
+}
 
 const corsOptions = {
   origin: corsOrigin,
@@ -85,10 +88,13 @@ app.get('/', (req, res) => {
 })
 
 // ROUTES -> link to controllers
-app.use('/public', routes.public)
-app.use('/session', routes.session)
-app.use('/user', userAuth, routes.user)
-app.use('/aws', routes.aws)
+app.use('/public', publicController)
+app.use('/session', sessionController)
+app.use('/user', userController)
+app.use('/aws', awsController)
+
+app.use('/activity', activityController)
+app.use('/creator', creatorController)
 
 app.use((err, req, res, next) => {
   if (!err) {
@@ -116,74 +122,6 @@ app.use((req, res) => {
   if (!res.headersSent) {
     res.status(404).json({ message: 'Sorry can\'t find that!' })
   }
-})
-
-let httpTerminator
-
-const migrator = new Umzug({
-  logger: console,
-  storage: new SequelizeStorage({ sequelize: db }),
-  context: db.getQueryInterface(),
-  migrations: {
-    glob: './migrations/*.js',
-    resolve: ({ name, path, context }) => {
-      // Adjust the migration from the new signature to the v2 signature, making easier to upgrade to v3
-      const migration = require(path)
-      return {
-        name,
-        up: async () => migration.up(context),
-        down: async () => migration.down(context),
-      }
-    },
-  },
-})
-
-const seeder = new Umzug({
-  logger: console,
-  storage: new SequelizeStorage({ sequelize: db, modelName: 'SequelizeData' }),
-  context: db.getQueryInterface(),
-  migrations: {
-    glob: './seeders/*.js',
-    resolve: ({ name, path, context }) => {
-      // Adjust the migration from the new signature to the v2 signature, making easier to upgrade to v3
-      const seed = require(path)
-      return {
-        name,
-        up: async () => seed.up(context),
-        down: async () => seed.down(context),
-      }
-    },
-  },
-})
-
-migrator
-  .up()
-  .then(() => {
-    if (!isProduction) seeder.up()
-    console.log(`Starting server on ${port}`)
-    const server = app.listen(port, () => {
-      console.log(`Server listening http on ${port}`)
-      httpTerminator = createHttpTerminator({ server })
-      process.send && process.send('ready')
-      if (process.env.API_SERVER_HOST !== 'localhost') {
-        setupCrons()
-      }
-    })
-  })
-  .catch((err) => {
-    console.log('ERROR migrating DB:', err)
-    process.exit()
-  })
-
-process.on('SIGINT', async () => {
-  console.log('Received shutdown signal')
-  await db.close().catch(() => process.exit(1))
-  console.log('DB closed')
-  if (httpTerminator) {
-    await httpTerminator.terminate().catch(() => process.exit(1))
-    console.log('server terminated')
-  }
-  process.exit(0)
 })
 
 module.exports = app

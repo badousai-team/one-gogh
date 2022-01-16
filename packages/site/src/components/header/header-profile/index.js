@@ -10,21 +10,18 @@ import {
   ListItemText,
   Avatar,
   ButtonBase,
-  Button,
   useMediaQuery,
 } from '@mui/material'
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { makeStyles } from '@mui/styles'
 
-import Link from 'site/components/link'
 import { DISABLE_LOGIN } from 'site/config'
 import { useStores } from 'site/hooks'
 
-import Account from '../account'
 // import AddProjectButton from './add-project-button'
+import CreateNFT from './create-nft'
 
 import styles from './styles'
 
@@ -66,11 +63,12 @@ const HeaderProfile = ({ onCloseDrawer }) => {
     return (
       <>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
-          {!isMobile && <Account />}
+          <CreateNFT />
           <ButtonBase
             variant="contained"
             color="primary"
             id="account-profile-button"
+            style={{ borderRadius: '1rem' }}
             aria-controls="account-menu"
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
@@ -82,7 +80,9 @@ const HeaderProfile = ({ onCloseDrawer }) => {
                 alt={accountStore.user?.username}
                 className={classes.avatar}
               />
-              <KeyboardArrowDownIcon size="small" />
+              <div style={{ textAlign: 'center', padding: '0 0.4rem', fontWeight: 'bold' }}>
+                {accountStore.accountShortDisplay}
+              </div>
             </div>
           </ButtonBase>
         </div>
@@ -99,9 +99,6 @@ const HeaderProfile = ({ onCloseDrawer }) => {
               'aria-labelledby': 'account-profile-button',
             }}
           >
-            <div style={{ textAlign: 'center', padding: '0 1rem', fontWeight: 'bold' }}>
-              {accountStore.accountShortDisplay}
-            </div>
             <MenuItem onClick={handleProfileClick}>
               <ListItemIcon>
                 <Avatar className={classes.iconMenuContainer}>
