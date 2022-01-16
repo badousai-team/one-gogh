@@ -3,8 +3,54 @@ const {
   CreatorFollow,
 } = require('../../models')
 const { db } = require('../../models/db')
-
+const {
+  isNumber,
+  calculateLimitAndOffset,
+  paginate,
+} = require('../../utils/helper')
 const { NotFoundError, AuthenticationError } = require('../../exceptions')
+
+
+module.exports.GetAllCreatorUseCase = async (query) => {
+
+  // http://www.sqlines.com/postgresql/limit_offset
+  let limit = (query && query.limit && isNumber(query.limit)) ? parseInt(query.limit, 10) : 10
+  let offset = (query && query.offset && isNumber(query.offset)) ? parseInt(query.offset, 10) : 0
+
+  if (query.page) {
+    const calc = calculateLimitAndOffset(Number(query.page), limit)
+    limit = calc.limit
+    offset = calc.offset
+  }
+
+  let sortBy = query.sortBy || 'createdAt'
+  let sortDirection = 'DESC'
+  const order = [[sortBy, sortDirection]]
+
+  const result = await User.findAndCountAll({
+    limit,
+    offset,
+    order,
+  })
+
+
+  let meta = {}
+
+  if (query.page) {
+    meta = paginate(
+      query.page,
+      result.count,
+      result.rows,
+      limit,
+    )
+  }
+
+  return {
+    list: result.rows,
+    total: result.count,
+    meta,
+  }
+}
 
 module.exports.GetCreatorByUsernameUseCase = async ({ username }) => {
   const following = [db.literal(`

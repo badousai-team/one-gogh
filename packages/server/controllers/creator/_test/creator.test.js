@@ -1,4 +1,8 @@
-const { GetCreatorByUsernameUseCase, FollowOtherCreatorUseCase } = require('../usecase')
+const {
+  GetCreatorByUsernameUseCase,
+  FollowOtherCreatorUseCase,
+  GetAllCreatorUseCase,
+} = require('../usecase')
 const TestHelper = require('../../../tests/helper')
 const { User, CreatorFollow } = require('../../../models')
 
@@ -13,6 +17,21 @@ describe('Creator Usecase', () => {
       where: {},
       force: true,
     })
+  })
+
+  describe('GetAllCreatorUseCase Usecase', () => {
+    it('Should fetch Creator correctly', async () => {
+      // Arrange
+      const users = await TestHelper.createDummyUser()
+
+      const query = {}
+
+      // Action
+      const result = await GetAllCreatorUseCase(query)
+
+      // Assert
+      expect(result.list.length).toEqual(users.length)
+    } )
   })
 
   describe('GetCreatorUsername Usecase', () => {

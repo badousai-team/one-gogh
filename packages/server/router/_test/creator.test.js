@@ -30,16 +30,16 @@ describe('GET /creator/', () => {
       expect(response.body.creator).toBeDefined()
     })
 
-    it('should response 404 when Creator not found', async () => {
-      // Arrange
-      const users = await TestHelper.createDummyUser()
+    // it('should response 404 when Creator not found', async () => {
+    //   // Arrange
+    //   const users = await TestHelper.createDummyUser()
 
-      // Action
-      const response = await supertest(app).get(`/creator/${users[0].email}`)
+    //   // Action
+    //   const response = await supertest(app).get(`/creator/${users[0].email}`)
 
-      // Assert
-      expect(response.statusCode).toBe(404)
-    })
+    //   // Assert
+    //   expect(response.statusCode).toBe(404)
+    // })
   })
 
   describe('PUT /creator/:id/follow', () => {
