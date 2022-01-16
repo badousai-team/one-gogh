@@ -21,8 +21,9 @@ module.exports.handleFetchAllCreator = async (req, res) => {
 
 module.exports.handleGetCreatorByUsername = async (req, res) => {
   const { username } = req.params
+  const userId = req.currentUser?.id
 
-  const creator = await GetCreatorByUsernameUseCase({ username })
+  const creator = await GetCreatorByUsernameUseCase({ username, userId })
 
   res.json({ creator })
 }
