@@ -34,7 +34,7 @@ const SearchCreator = () => {
   }
 
   return (
-    <div style={{ marginLeft: '2rem' }}>
+    <div style={{ marginLeft: '1rem' }}>
       <form
         noValidate
         onSubmit={handleSearch}
@@ -47,7 +47,7 @@ const SearchCreator = () => {
             freeSolo
             className={classes.textfield}
             options={top100Films}
-            sx={{ width: 333 }}
+            sx={{ width: 300 }}
             classesAutocomplete={classes.textField}
             blurOnSelect
             value={search}

@@ -62,7 +62,14 @@ const HeaderProfile = ({ onCloseDrawer }) => {
   if (accountStore.user && !isMobile) {
     return (
       <>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'end',
+            width: '410px',
+          }}
+        >
           <CreateNFT />
           <ButtonBase
             variant="contained"

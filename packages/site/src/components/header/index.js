@@ -100,11 +100,6 @@ const Header = () => {
         <HeaderContainer disableGutters maxWidth="lg">
           <Stack direction="row" spacing={2} alignItems="center">
             <LogoLink href="/" underline="none">
-              <LogoImg
-                alt="One Gogh"
-                title="One Gogh"
-                src="/images/png/harmony.png"
-              />
               <LogoText variant="h3">
                 One Gogh
               </LogoText>
