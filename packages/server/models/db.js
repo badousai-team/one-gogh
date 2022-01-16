@@ -5,7 +5,7 @@ process.env.TZ = 'UTC+8'
 
 const config = {
   ...Config.dbConfig,
-  logging: Config.env.PRODUCTION ? false : console.log,
+  logging: (Config.env.PRODUCTION || Config.env.TEST) ? false : console.log,
   omitNull: true,
   pool: {
     max: 5,
