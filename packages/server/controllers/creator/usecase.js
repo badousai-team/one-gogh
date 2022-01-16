@@ -57,7 +57,7 @@ module.exports.GetAllCreatorUseCase = async (query) => {
   }
 }
 
-module.exports.GetCreatorByUsernameUseCase = async ({ username }) => {
+module.exports.GetCreatorByUsernameUseCase = async ({ username, userId }) => {
   const following = [db.literal(`
     (SELECT COUNT(*)::integer FROM
       public."CreatorFollow" AS follow
@@ -83,6 +83,8 @@ module.exports.GetCreatorByUsernameUseCase = async ({ username }) => {
     following,
     follower,
   ]
+
+
   const creator = await User.findOne({
     attributes,
     where: {
@@ -92,7 +94,15 @@ module.exports.GetCreatorByUsernameUseCase = async ({ username }) => {
 
   if (!creator) throw new NotFoundError('Creator not found')
 
-  return creator
+  const result = creator.display()
+
+  if (userId) {
+    const following = await CreatorFollow.findOne({ userId: creator.id, followingId: userId })
+    if (following) result.follow = true
+    else result.follow = false
+  }
+
+  return result
 }
 
 module.exports.FollowOtherCreatorUseCase = async ({

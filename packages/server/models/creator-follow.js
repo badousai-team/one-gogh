@@ -26,7 +26,7 @@ CreatorFollow.init({
   },
 }, {
   sequelize: db,
-  paranoid: true,
+  paranoid: false,
   tableName: 'CreatorFollow',
 })
 

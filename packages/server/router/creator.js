@@ -10,7 +10,7 @@ const {
 
 // get top project
 router.get('/', handleFetchAllCreator)
-router.get('/:username', handleGetCreatorByUsername)
+router.get('/:username', userAuth, handleGetCreatorByUsername)
 router.put('/:id/follow', userAuth, handleFollowOtherCreator)
 
 module.exports = router
