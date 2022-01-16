@@ -1,5 +1,8 @@
-import React from 'react'
+import React, {
+  useCallback,
+} from 'react'
 import { observer } from 'mobx-react'
+import { useHistory } from 'react-router-dom'
 import {
   IconButton,
 } from '@mui/material'
@@ -14,9 +17,15 @@ const ActionImg = styled('img')(({ theme }) => ({
 }))
 
 const SearchCreator = () => {
+  const route = useHistory()
+
+  const home = useCallback(() => {
+    route.push('/')
+  }, [])
+
   return (
-    <div style={{ marginLeft: '2rem' }}>
-      <IconButton>
+    <div>
+      <IconButton onClick={home}>
         <ActionImg
           alt="Home"
           title="Home"
@@ -25,8 +34,8 @@ const SearchCreator = () => {
       </IconButton>
       <IconButton>
         <ActionImg
-          alt="Home"
-          title="Home"
+          alt="Explore"
+          title="Explore"
           src="/images/png/explore.png"
         />
       </IconButton>
