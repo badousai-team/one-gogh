@@ -13,9 +13,13 @@
     "seed": "sequelize db:seed:all",
     "seed:undo": "sequelize db:seed:undo",
     "seed:undo:all": "sequelize db:seed:undo:all",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=production node index.js",
+    "migrate:test": "NODE_ENV=test sequelize db:migrate",
+    "migrate:test:undo": "NODE_ENV=test sequelize db:migrate:undo",
+    "migrate:test:undo:all": "NODE_ENV=test sequelize db:migrate:undo:all",
+    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "test:watch": "NODE_ENV=test jest --watchAll --coverage"
   },
   "nodemonConfig": {
     "ignore": [
@@ -60,7 +64,11 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.24",
     "nodemon": "^2.0.4",
-    "sequelize-cli": "^6.2.0"
+    "jest": "^27.4.5",
+    "supertest": "^6.1.6",
+    "sequelize-cli": "^6.2.0",
+    "faker": "^5.5.3"
   }
 }
