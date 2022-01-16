@@ -43,13 +43,14 @@ describe('Creator Usecase', () => {
       const users = await TestHelper.createDummyUser()
 
       const currentUserId = users[0].id
-      const followingCreatorId = users[0].id
+      const followingCreatorId = users[1].id
 
       //  Action
       await FollowOtherCreatorUseCase({
         userId: currentUserId,
         followingId: followingCreatorId,
       })
+
 
       const followingCreated = await CreatorFollow.findAll({
         where: {
