@@ -28,6 +28,8 @@ export default function CustomizedAutocomplete({
   errorMessage = null,
   helperTextTextField = null,
   inputRefTextField = null,
+  blurOnSelect,
+  freeSolo,
   ...props
 }) {
   const [open, setOpen] = useState(false)
@@ -68,6 +70,8 @@ export default function CustomizedAutocomplete({
       loading={loading}
       renderOption={renderOption}
       size={size}
+      blurOnSelect={blurOnSelect}
+      freeSolo={freeSolo}
       {...props}
       renderInput={(params) => (
         <MuiTextField
