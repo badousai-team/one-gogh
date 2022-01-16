@@ -27,7 +27,7 @@ const color = {
   astronaut: '#2B396E',
   downriver: '#0B194E',
 
-  electricBlue: '#00C0D8',
+  electricBlue: '#00ADE8',
   lightBlue: '#E5F7FD',
   whiteBlue: '#F2FCFD',
 

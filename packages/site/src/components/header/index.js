@@ -16,6 +16,8 @@ import Link from 'site/components/link'
 
 import DrawerNav from './drawer'
 import HeaderProfile from './header-profile'
+import SearchCreator from './search-creator'
+import HomeExplore from './home-explore'
 
 const HeaderBar = styled(AppBar)(({
   backgroundColor: '#fff',
@@ -96,16 +98,15 @@ const Header = () => {
         elevation={0}
       >
         <HeaderContainer disableGutters maxWidth="lg">
-          <LogoLink href="/" underline="none">
-            <LogoImg
-              alt="One Gogh"
-              title="One Gogh"
-              src="/images/png/harmony.png"
-            />
-            <LogoText variant="h3">
-              One Gogh
-            </LogoText>
-          </LogoLink>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <LogoLink href="/" underline="none">
+              <LogoText variant="h3">
+                One Gogh
+              </LogoText>
+            </LogoLink>
+            <SearchCreator />
+          </Stack>
+          <HomeExplore />
           <HeaderRight>
             {isMobile && accountStore.user ? (
               <Stack direction="row">
@@ -122,7 +123,11 @@ const Header = () => {
                   <ProfilePhoto />
                 </IconButton>
               </Stack>
-            ) : <HeaderProfile />}
+            ) : (
+              <Stack direction="row">
+                <HeaderProfile />
+              </Stack>
+            )}
           </HeaderRight>
         </HeaderContainer>
       </HeaderBar>
