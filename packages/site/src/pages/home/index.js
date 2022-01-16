@@ -47,7 +47,19 @@ function Media(props) {
   }, [id])
 
   return (
-    <Card sx={{ width: 405, m: 2, margin: 0 }} variant="outlined">
+    <Card
+      sx={{ width: {
+        sm: 200,
+        md: 805,
+      },
+      m: 2,
+      margin: 0,
+      minHeight: {
+        md: 500,
+        sm: 100,
+      } }}
+      variant="outlined"
+    >
       <CardHeader
         avatar={
           loading ? (
@@ -89,11 +101,19 @@ function Media(props) {
       <CardActionArea onClick={seeDetails}>
 
         {loading ? (
-          <Skeleton sx={{ height: 190 }} animation="wave" variant="rectangular" />
+          <Skeleton
+            sx={{ height: {
+              sm: 100,
+              md: 500,
+            },
+            }}
+            animation="wave"
+            variant="rectangular"
+          />
         ) : (
           <CardMedia
             component="img"
-            height="140"
+            // height="100"
             image={img}
             alt="Nicola Sturgeon on a TED talk stage"
           />
