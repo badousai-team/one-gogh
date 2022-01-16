@@ -181,12 +181,12 @@ function Media(props) {
             value: '123123912939192m3918m239m183d91',
           },
           {
-            id: 1,
+            id: 2,
             label: 'Created on',
             value: '15/01/2022 22.16.27',
           },
           {
-            id: 1,
+            id: 3,
             label: 'Author',
             value: 'Ted @ted',
           }].map((d) => {
